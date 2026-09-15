@@ -8,7 +8,7 @@ export class Developer {
     constructor(firstName, lastName) {
         const provideName = new PersonName(firstName, lastName);
         this._id = provideName.isValid() ? DeveloperId.build() : null;
-        this.name = provideName;
+        this._name = provideName;
     }
 
     get name() {

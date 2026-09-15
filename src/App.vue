@@ -10,9 +10,9 @@ const developerCount = ref(0);
 const hasRegistered = ref(false);
 
 function updateRegisteredDeveloperInfo(payload) {
-  registeredDeveloper.value = payload;
+  registeredDeveloper.value = payload.developer;
   hasRegistered.value = true;
-  updateDeveloperCount(payload);
+  updateDeveloperCount(payload.developer);
 }
 
 function updateDeveloperCount(developer) {
