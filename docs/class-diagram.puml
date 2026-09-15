@@ -1,0 +1,94 @@
+@startuml Hello Vue Developer Class Diagram
+
+  class "«Component»\nApp" as App {
+    -registeredDeveloper: Developer
+    -developerCount: Number
+    -hasRegistered: Boolean
+    -- methods --
+    +updateRegisteredDeveloperInfo(payload: Object)
+    +resetRegisteredDeveloperInfo()
+    +updateDeveloperCount(developer: Developer)
+  }
+
+
+
+package "shared" {
+  package "domain.model" {
+    class PersonName {
+      -firstName: String
+      -lastName: String
+      +firstName: String
+      +lastName: String
+      +fullName: String
+      +equals(other: PersonName): Boolean
+      +isFullyNamed(): Boolean
+    }
+  }
+}
+
+package "greetings" {
+  package "domain.model" {
+    class Developer {
+      -id: DeveloperId
+      -name: PersonName
+      +id: DeveloperId
+      +name: PersonName
+      +fullName: String
+      +isRegisterable(): Boolean
+      +isIdentified(): Boolean
+    }
+
+    class DeveloperId {
+      -value: String
+      +value: String
+      +equals(other: DeveloperId): Boolean
+      +{static} build(): DeveloperId
+      +toString(): String
+    }
+
+    Developer "1" *-- "1" PersonName : name
+    Developer "1" *-- "0..1" DeveloperId : id
+  }
+
+  package "presentation.components" {
+    class "«Component»\nDeveloperRegistration" as DeveloperRegistration {
+      -firstName: String
+      -lastName: String
+      -errorMessage: String
+      -- methods --
+      +submitRegistrationRequest()
+      +deferRegistration()
+      +clearFields()
+      -- emits --
+      developer-registered(payload: Object)
+      registration-deferred(payload: Object)
+    }
+
+    class "«Component»\nDeveloperGreeting" as DeveloperGreeting {
+      +developer: Developer
+      +greeting: String
+    }
+
+    class "«Component»\nDeveloperCountShow" as DeveloperCountShow {
+      +developerCount: Number
+    }
+  }
+
+}
+
+' Relationships
+App *-down-> DeveloperRegistration : contains
+App *-down-> DeveloperGreeting : contains
+App *-down-> DeveloperCountShow : contains
+DeveloperRegistration -up-> App : emits developer-registered
+DeveloperRegistration -up-> App : emits registration-deferred
+DeveloperGreeting --> Developer : uses
+DeveloperGreeting --> PersonName : uses
+App --> Developer : uses
+App --> PersonName : uses
+App --> DeveloperId : uses
+DeveloperGreeting --> DeveloperId : uses
+DeveloperGreeting <-- App : passes developer
+DeveloperCountShow <-- App : passes developerCount
+
+@enduml
